@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="statics/css/login.css">
+</head>
+
+<body>
+    <div id="rightContainter">
+        <img id="indexPhoto" src="statics/img/indexPhoto.jpg" width="100%">
+    </div>
+    <div id="upperContainer">
+        <img id="charlieLogo" src="statics/icon/Charlie_the_unicorn.png" width="120px">
+    </div>
+    <div id="inputContainer">
+        <h3 style="color: rgb(145,96,0);">修改密碼</h3>
+        <form id="loginForm" accept-charset="UTF-8">
+            <div style="display: none;"><input type="hidden" name="_method" value="POST"></div>
+            <div class="input oldPasswd required">
+                <label for="oldPasswd">原密碼</label>
+                <input name="oldPasswd" type="password" id="oldPasswd" required>
+            </div>
+            <div class="input newPasswd required">
+                <label for="newPasswd">新密碼</label>
+                <input name="newPasswd" type="password" id="newPasswd" required>
+            </div>
+            <div class="input confirmPasswd required">
+                <label for="confirmPasswd">確認新密碼</label>
+                <input name="confirmPasswd" type="password" id="confirmPasswd" required>
+            </div>
+            <div class="submit">
+                <a href="personal.html" style="text-decoration: none;">← 返回</a>
+                <input type="button" value="確認修改" id="submit">
+            </div>
+        </form>
+    </div>
+</body>
+
+<script type="text/javascript" crossorigin="anonymous">
+    if (!(localStorage.getItem("isLogin"))) window.location.href = "index.html";
+
+    var title = localStorage.getItem("title");
+
+    function updateDoctorPassword() {
+        $.ajax({
+            type: "POST",
+            url: "http://140.115.81.245:8080/NCU_MIS_SA/api/outpatient.do",
+            data: "id=" + id,
+            crossDomain: true,
+            cache: false,
+            dataType: 'json',
+            timeout: 5000,
+            success: function (response) {
+                if (response.status == 200) {
+                    console.log(response);
+                }
+            },
+            error: function () {
+                alert("查無資料");
+            }
+        });
+    }
+
+    if (title == "doctor")
+    else if (title == "pharmacist")
+    else if (title == "staff")
+</script>
+
+</html>

@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>編輯病患</title>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+    integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+  <link rel="stylesheet" type="text/css" href="statics/css/editPatient.css">
+  <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css"
+    integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+    integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous">
+    </script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+    integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous">
+    </script>
+</head>
+
+<body style="margin: 8px;">
+  <div id="logoBar">
+    <img class="logo" src="statics/icon/Charlie_the_unicorn.png" style="cursor: pointer;">
+    <h1 class="logo" style="cursor: pointer;">Charlie Clinic</h1>
+  </div>
+  <div id="navBar">
+    <div class="page appointment">掛號管理系統</div>
+    <div class="page patient" style="background:  rgb(178, 166, 142);">病歷管理系統</div>
+    <div class="page medicine">藥品管理系統</div>
+    <div class="page hr">人事管理系統</div>
+    <div class="page personal">個人資料頁面</div>
+    <div class="page logout"><button id="logoutBtn" type="button" class="btn">登出</button></div>
+  </div>
+  <div id="container">
+    <div id="functions">
+      <div id="titleOfSystem">病歷管理系統</div>
+      <div class="subFunction patientTable mt-3">
+        <i class="fas fa-play"></i>
+        <p style="padding-top: 10px; cursor: pointer;">檢視所有病歷</p>
+      </div>
+      <div class="subFunction patientInfo">
+        <i class="fas fa-play"></i>
+        <p style="text-decoration: underline;">病患基本資料</p>
+      </div>
+      <div class="subFunction recordTable">
+        <i class="fas fa-play"></i>
+        <p style="cursor: pointer;">看診紀錄列表</p>
+      </div>
+    </div>
+    <form>
+      <div id="listTitleContainer">
+        <div class="listTitle addRecord">病患基本資料</div>
+        <input type="button" value="確定修改" id="submit">
+      </div>
+      <div id="infoContainer" style="padding: 1%; width: 45%;">
+        <div class="info">
+          <div class="infoContent form-group row">
+            <div class="listTitle col-sm-3 col-form-label">姓名</div>
+            <input type="text" class="listInfo form-control col-sm-9" name="name" id="patientName"
+              style="padding: 5px;">
+          </div>
+        </div>
+        <fieldset disabled>
+          <div class="infoContent form-group row">
+            <label for="disabledTextInput" class="col-sm-3 col-form-label">身分證字號</label>
+            <input type="text" id="patientID" class="listInfo form-control col-9" style="padding: 5px;">
+          </div>
+        </fieldset>
+        <div class="infoContent form-group row">
+          <div class="listTitle col-sm-3 col-form-label">性別</div>
+          <select class="listInfo form-control col-sm-9" id="patientGender" name="gender">
+            <option value="男" selected="selected">男</option>
+            <option value="女">女</option>
+          </select>
+        </div>
+        <div class="infoContent form-group row">
+          <div class="listTitle col-sm-3 col-form-label ">出生年月日</div>
+          <input class="listInfo  form-control col-sm-9" name="dob" type="date" id="patientDob" required>
+        </div>
+        <div class="infoContent form-group row">
+          <div class="listTitle  col-sm-3 col-form-label">血型</div>
+          <input class="listInfo  form-control col-sm-9" name="bloodType" type="text" id="patientBloodType" required>
+        </div>
+        <div class="infoContent form-group row">
+          <div class="listTitle  col-sm-3 col-form-label">聯絡電話</div>
+          <input class="listInfo  form-control col-sm-9" name="phone" type="text" id="patientPhone" required>
+        </div>
+        <div class="infoContent form-group row">
+          <div class="listTitle  col-sm-3 col-form-label">聯絡地址</div>
+          <input class="listInfo  form-control col-sm-9" name="address" type="text" id="patientAddress" required>
+        </div>
+        <div class="infoContent form-group row">
+          <div class="listTitle  col-sm-3 col-form-label">特殊疾病</div>
+          <input class="listInfo  form-control col-sm-9" name="specialDisease" type="text" id="patientSpecialDisease"
+            required>
+        </div>
+        <div class="infoContent form-group row">
+          <div class="listTitle  col-sm-3 col-form-label">過敏藥物</div>
+          <input class="listInfo  form-control col-sm-9" name="drugAllergy" type="text" id="patientDrugAllergy"
+            required>
+        </div>
+      </div>
+    </form>
+    <div id="appointmentContainer">
+      <p id="todaysAppointment">目前掛號</p>
+      <div id="appointmentTitleContainer">
+        <div class="appointmentTitle number">#</div>
+        <div class="appointmentTitle id">身分證字號</div>
+        <div class="appointmentTitle name">姓名</div>
+      </div>
+      <div id="appointmentListContainer">
+      </div>
+    </div>
+  </div>
+  <!-- Modal -->
+  <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalCenterTitle">更新成功!</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">是否跳轉到所有病歷頁面...</div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">否 </button>
+          <button type="button" class="btn btn-info" id="gotoPatient">是</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+<script type="text/javascript" crossorigin="anonymous">
+  if (!(localStorage.getItem("isLogin"))) window.location.href = "index.html";
+  if (localStorage.getItem("title") != "staff" && localStorage.getItem("title") != "doctor") {
+    alert("無訪問權限");
+    history.go(-1);
+  }
+  var url_string = window.location.href;
+  var url = new URL(url_string);
+  var pid = url.searchParams.get("pid");
+  var id;
+
+  function getDay() {
+    var ddd = new Date();
+    var day = ddd.getDate();
+    var month = ddd.getMonth() + 1;
+    if (ddd.getMonth() < 10) {
+      var month = "0" + (ddd.getMonth() + 1);
+    }
+    if (ddd.getDate() < 10) {
+      day = "0" + ddd.getDate();
+    }
+    var datew = ddd.getFullYear() + "-" + month + "-" + day;
+    var datew = datew.toString();
+    $("[name=date]").val(datew);
+    return datew;
+  }
+
+  function updateAppointment(data) {
+    $("#appointmentListContainer").empty();
+    var table_html = '';
+    console.log("updating");
+    $.each(data, function (index, value) {
+      table_html += '<div class="appointmentList" style="padding-bottom: 15px;"><div class="appointmentContent number">' + value["appointment_number"] + '</div>';
+      table_html += '<div class="appointmentContent id">' + value["pid"] + '</div>';
+      table_html += '<div class="appointmentContent name">' + value["name"] + '</div></div>';
+    })
+    $("#appointmentListContainer").append(table_html);
+  }
+
+  function getAllAppointment() {
+    // 發出POST的GET請求取得所有掛號列表
+    $.ajax({
+      type: "GET",
+      url: "http://140.115.81.245:8080/NCU_MIS_SA/api/appointment.do?searching_date=" + getDay(),
+      crossDomain: true,
+      cache: false,
+      dataType: 'json',
+      timeout: 5000,
+      success: function (response) {
+        if (response.status == 200) {
+          updateAppointment(response.response.data);
+        }
+        console.log(response);
+      },
+      error: function () {
+        alert("無法連線到伺服器！");
+      }
+    });
+  }
+
+  getAllAppointment();
+
+  function getPatientData() {
+    $.ajax({
+      type: "GET",
+      url: "http://140.115.81.245:8080/NCU_MIS_SA/api/patient.do",
+      data: "pid=" + pid,
+      crossDomain: true,
+      cache: false,
+      dataType: 'json',
+      timeout: 5000,
+      success: function (response) {
+        if (response.status == 200) {
+          id = response['response']['data'][0]['id'];
+          // console.log(id);
+          document.getElementById('patientName').value = response['response']['data'][0]['name'];
+          document.getElementById('patientID').value = response['response']['data'][0]['pid'];
+          document.getElementById('patientGender').value = response['response']['data'][0]['gender'];
+          document.getElementById('patientDob').value = response['response']['data'][0]['dob'];
+          document.getElementById('patientBloodType').value = response['response']['data'][0]['bloodType'];
+          document.getElementById('patientPhone').value = "0" + response['response']['data'][0]['phone'];
+          document.getElementById('patientAddress').value = response['response']['data'][0]['address'];
+          document.getElementById('patientSpecialDisease').value = response['response']['data'][0][
+            'specialDisease'
+          ];
+          document.getElementById('patientDrugAllergy').value = response['response']['data'][0]['drugAllergy'];
+        }
+      },
+      error: function () {
+        alert("無法連線到伺服器！");
+      }
+    });
+  }
+  getPatientData();
+
+  function updatePatient(id) {
+    var name = $('#patientName').val();
+    var pid = $('#patientID').val();
+    var gender = $('#patientGender').val();
+    var dob = $('#patientDob').val();
+    var blooodtype = $('#patientBloodType').val();
+    var phone = $('#patientPhone').val();
+    var address = $('#patientAddress').val();
+    var specialDisease = $('#patientSpecialDisease').val();
+    var drugAllergy = $('#patientDrugAllergy').val();
+    var data_object = {
+      "id": id,
+      "pid": pid,
+      "name": name,
+      "gender": gender,
+      "dob": dob,
+      "bloodType": blooodtype,
+      "phone": phone,
+      "address": address,
+      "specialDisease": specialDisease,
+      "drugAllergy": drugAllergy,
+      "edited_by": "測試"
+    };
+    // 將JSON格式轉換成字串
+    var data_string = JSON.stringify(data_object);
+    // 發出POST的PUT請求
+    $.ajax({
+      type: "PUT",
+      url: "http://140.115.81.245:8080/NCU_MIS_SA/api/patient.do",
+      data: data_string,
+      crossDomain: true,
+      cache: false,
+      dataType: 'json',
+      timeout: 5000,
+      success: function (response) {
+        $('#flashMessage').html(response.message);
+        $('#flashMessage').show();
+        if (response.status == 200) {
+          console.log("更新成功")
+          editsuccess();
+        }
+      },
+      error: function () {
+        alert("無法連線到伺服器！");
+      }
+    });
+  }
+
+  function editsuccess() {
+    $('#exampleModalCenter').modal('show');
+  }
+  $('#submit').click(function () {
+    updatePatient(id);
+  });
+  $('#gotoPatient').click(function () {
+    window.location.href = 'patient.html';
+  });
+  $(".logo").click(function () {
+    window.location.href = 'appointment.html';
+  });
+  $(".appointment").click(function () {
+    window.location.href = 'appointment.html';
+  });
+  $(".patient").click(function () {
+    window.location.href = 'patient.html';
+  });
+  $(".medicine").click(function () {
+    window.location.href = 'medicine.html';
+  });
+  $(".hr").click(function () {
+    window.location.href = 'humanResource.html';
+  });
+  $(".personal").click(function () {
+    window.location.href = 'personal.html';
+  });
+  $('#logoutBtn').click(function () {
+    window.location.href = 'logout.html';
+  });
+  $(".patientTable").click(function () {
+    window.location.href = 'patient.html';
+  });
+  $(".recordTable").click(function () {
+    window.location.href = 'record.html?patient_id=' + id;
+  });
+
+</script>
+
+</html>

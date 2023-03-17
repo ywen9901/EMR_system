@@ -1,0 +1,169 @@
+#logoBar {
+    margin-top: -10px;
+    background-color:  rgb(246, 244, 244);
+    width: 100%;
+    height: 110px;
+    position: relative;
+}
+
+#logoBar img {
+    width: 80px;
+    position: absolute;
+    left: 100px;
+    top: 10px;
+}
+
+#logoBar h1 {
+    position: absolute;
+    left: 200px;
+    line-height: 70px;
+    font-size: 40px;
+    color: rgb(145, 96, 0);
+}
+
+#navBar {
+    position: absolute;
+    background-color: rgb(145, 96, 0);
+    left: 10%;
+    top: 140px;
+    width: 78%;
+    height: 50px;
+    padding-left: 2%;
+}
+
+.page {
+    font-size: 18px;
+    color: white;
+    height: 100%;
+    line-height: 50px;
+    padding: 0% 3%;
+    display: inline-block;
+    cursor: pointer;
+}
+
+.page:hover {
+    text-decoration: underline;
+}
+
+#logoutBtn {
+    border: 0;
+    background-color: white;
+    color: rgb(145, 96, 0);
+    border-radius: 20px;
+    font-size: 15px;
+    font-weight: bold;
+    padding: 5px 35px;
+}
+
+#container {
+    background-color: rgb(246, 244, 244);
+    height: 500px;
+    width: 80%;
+    position: absolute;
+    left: 10%;
+    top: 220px;
+}
+
+#functions {
+    width: 15%;
+    margin-top: 30px;
+    margin-left: 30px;
+    position: relative;
+}
+
+#titleOfSystem {
+    background-color: rgb(210, 193, 159);
+    font-size: 18px;
+    border-radius: 15px;
+    height: 50px;
+    line-height: 50px;
+    text-align: center;
+    font-weight: bold;
+}
+
+.table {
+    margin-top: 10px;
+}
+
+.subFunction {
+    padding: 0% 10%;
+    margin-left: 8px;
+}
+
+.subFunction p {
+    padding: 0% 5%;
+    display: inline-block;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+#listTitle {
+    position: absolute;
+    top: 60px;
+    height: 50px;
+    width: 72%;
+    left: 23%;
+    border-bottom: 2px solid black;
+}
+
+#listContainer {
+    position: absolute;
+    top: 110px;
+    height: 350px;
+    width: 72%;
+    left: 23%;
+    padding-right: 17px;
+    display: inline;
+    overflow-y: overlay;
+}
+
+#infoContainer {
+    position: absolute;
+    top: 110px;
+    height: 350px;
+    width: 72%;
+    left: 38%;
+    padding-right: 17px;
+    display: inline;
+    overflow-y: overlay;
+}
+
+.listTitle {
+    display: inline-block;
+    font-weight: bold;
+    font-size: 20px;
+    line-height: 50px;
+    text-align: center;
+}
+
+.listContent {
+    font-weight: bold;
+    line-height: 50px;
+    text-align: left;
+}
+
+.infoContent {
+    font-weight: bold;
+    line-height: 50px;
+    text-align: left;
+}
+
+.infoContainer {
+    cursor: pointer;
+}
+
+.medName {
+    width: 16%;
+}
+
+.dose {
+    width: 16%;
+}
+
+.type {
+    width: 16%;
+}
+
+.category {
+    width: 16%;
+}

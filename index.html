@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <title></title>
+  <link rel="stylesheet" type="text/css" href="statics/css/login.css">
+</head>
+
+<body>
+  <div id="rightContainter">
+    <img id="indexPhoto" src="statics/img/indexPhoto.jpg" width="100%">
+  </div>
+  <div id="upperContainer">
+    <img id="charlieLogo" src="statics/icon/Charlie_the_unicorn.png" width="120px">
+    <div id="titleForm">
+      <form id="loginForm" accept-charset="UTF-8">
+        <select id="title">
+          <option value="doctor" selected>Doctor</option>
+          <option value="pharmacist">Pharmacist</option>
+          <option value="staff">Staff</option>
+        </select>
+    </div>
+  </div>
+  <div id="inputContainer">
+    <h3>Log In</h3>
+    <div style="display: none;"><input type="hidden" name="_method" value="POST"></div>
+    <div class="input account required">
+      <label for="memAccount">帳號</label>
+      <br />
+      <input name="account" type="text" id="memAccount" required>
+    </div>
+    <div class="input password required">
+      <label for="memPasswd">密碼</label>
+      <br>
+      <input name="password" type="password" id="memPasswd" required>
+    </div>
+
+    <div class="submit">
+      <a href="login_forgetpw.html">忘記密碼</a>
+      <input type="button" value="登入" id="submit" onclick="submitAction()">
+    </div>
+    </form>
+  </div>
+</body>
+
+<script type="text/javascript" crossorigin="anonymous">
+  // functions
+  if (localStorage.getItem("isLogin")) window.location.href = "appointment.html";
+
+  function doctorLogin(dataString) {
+    $.ajax({
+      type: "POST",
+      url: "http://140.115.81.245:8080/NCU_MIS_SA/api/doctor.do",
+      data: dataString,
+      crossDomain: true,
+      cache: false,
+      dataType: 'json',
+      timeout: 5000,
+      success: function (response) {
+        if (response.status == 200) {
+          console.log(response);
+          console.log(response.id);
+          if (response.id == 0) {
+            alert("帳號或密碼錯誤");
+          }
+          else {
+            localStorage.setItem("isLogin", true);
+            localStorage.setItem("id", response.id);
+            localStorage.setItem("title", "doctor");
+            window.location.href = "appointment.html";
+          }
+        }
+      },
+      error: function () {
+        alert("帳號或密碼錯誤");
+      }
+    });
+  }
+
+  function pharmacistLogin(dataString) {
+    $.ajax({
+      type: "POST",
+      url: "http://140.115.81.245:8080/NCU_MIS_SA/api/pharmacist.do",
+      data: dataString,
+      crossDomain: true,
+      cache: false,
+      dataType: 'json',
+      timeout: 5000,
+      success: function (response) {
+        if (response.status == 200) {
+          if (response.id == 0) {
+            alert("帳號或密碼錯誤");
+          }
+          else {
+            localStorage.setItem("isLogin", true);
+            localStorage.setItem("id", response.id);
+            localStorage.setItem("title", "pharmacist");
+            window.location.href = "appointment.html";
+          }
+        }
+      },
+      error: function () {
+        alert("帳號或密碼錯誤");
+      }
+    });
+  }
+
+  function staffLogin(dataString) {
+    $.ajax({
+      type: "POST",
+      url: "http://140.115.81.245:8080/NCU_MIS_SA/api/administration.do",
+      data: dataString,
+      crossDomain: true,
+      cache: false,
+      dataType: 'json',
+      timeout: 5000,
+      success: function (response) {
+        if (response.status == 200) {
+          if (response.id == 0) {
+            alert("帳號或密碼錯誤");
+          }
+          else {
+            localStorage.setItem("isLogin", true);
+            localStorage.setItem("id", response.id);
+            localStorage.setItem("title", "staff");
+            window.location.href = "appointment.html";
+          }
+        }
+      },
+      error: function () {
+        alert("帳號或密碼錯誤");
+      }
+    });
+  }
+
+  function submitAction() {
+    // var title = document.getElementById("title").value;
+    var title = $("#title").val();
+    var account = $("#memAccount").val();
+    var password = $("#memPasswd").val();
+
+    var dataObject = {
+      "job": title,
+      "account": account,
+      "password": password
+    };
+
+    console.log(dataObject);
+    var dataString = JSON.stringify(dataObject);
+    localStorage.clear();
+    if (title == "doctor") {
+      doctorLogin(dataString);
+    }
+    else if (title == "pharmacist") {
+      pharmacistLogin(dataString);
+    }
+    else if (title == "staff") {
+      staffLogin(dataString);
+    }
+  }
+
+</script>
+
+</html>

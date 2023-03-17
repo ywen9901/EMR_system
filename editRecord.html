@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>編輯看診紀錄</title>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+    integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+  <link rel="stylesheet" type="text/css" href="statics/css/editPatient.css">
+  <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css"
+    integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+    integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous">
+    </script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+    integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous">
+    </script>
+</head>
+
+<body style="margin: 8px;">
+  <div id="logoBar">
+    <img class="logo" src="statics/icon/Charlie_the_unicorn.png" style="cursor: pointer;">
+    <h1 class="logo" style="cursor: pointer;">Charlie Clinic</h1>
+  </div>
+  <div id="navBar">
+    <div class="page appointment">掛號管理系統</div>
+    <div class="page patient" style="background:  rgb(178, 166, 142);">病歷管理系統</div>
+    <div class="page medicine">藥品管理系統</div>
+    <div class="page hr">人事管理系統</div>
+    <div class="page personal">個人資料頁面</div>
+    <div class="page logout"><button id="logoutBtn" type="button" class="btn">登出</button></div>
+  </div>
+  <div id="container">
+    <div id="functions">
+      <div id="titleOfSystem">病歷管理系統</div>
+      <div class="subFunction patientTable">
+        <i class="fas fa-play"></i>
+        <p style="padding-top: 10px; cursor: pointer;">檢視所有病歷</p>
+      </div>
+      <div class="subFunction patientInfo">
+        <i class="fas fa-play"></i>
+        <p style="text-decoration: underline;">病患基本資料</p>
+      </div>
+      <div class="subFunction recordTable">
+        <i class="fas fa-play"></i>
+        <p style="cursor: pointer;">看診紀錄列表</p>
+      </div>
+    </div>
+    <form>
+      <div id="listTitleContainer">
+        <div class="listTitle addRecord">病患看診紀錄</div>
+        <input type="button" value="確定修改" id="submit">
+      </div>
+      <div id="infoContainer" style="padding: 1%; width: 45%;">
+        <fieldset disabled>
+          <div class="infoContent form-group row">
+            <label for="disabledTextInput" class="col-sm-3 col-form-label">看診日期</label>
+            <input type="text" id="visited_date" class="listInfo form-control col-9" style="padding: 5px;">
+          </div>
+        </fieldset>
+        <div class="info">
+          <div class="infoContent form-group row">
+            <div class="listTitle col-sm-3 col-form-label">症狀</div>
+            <input type="text" class="listInfo form-control col-sm-9" name="symptoms" id="RecordSymptoms"
+              style="padding: 5px;">
+          </div>
+        </div>
+        <div class="infoContent form-group row">
+          <div class="listTitle col-sm-3 col-form-label">嚴重程度</div>
+          <input type="text" class="listInfo form-control col-sm-9" name="degree" id="RecordDegree">
+        </div>
+        <div class="infoContent form-group row">
+          <div class="listTitle col-sm-3 col-form-label ">持續天數</div>
+          <input class="listInfo  form-control col-sm-9" name="days" id="RecordDays" required>
+        </div>
+        <div class="infoContent form-group row">
+          <div class="listTitle  col-sm-3 col-form-label">開立藥物</div>
+          <input class="listInfo  form-control col-sm-9" name="Medicine_id" type="text" id="RecordMedicine_id" required>
+        </div>
+        <div class="infoContent form-group row">
+          <div class="listTitle  col-sm-3 col-form-label">看診醫生</div>
+          <input class="listInfo  form-control col-sm-9" name="doctor" type="text" id="Recorddoctor" required>
+        </div>
+        <div class="infoContent form-group row">
+          <div class="listTitle  col-sm-3 col-form-label">備註</div>
+          <input class="listInfo  form-control col-sm-9" name="note" type="text" id="Recordnote" required>
+        </div>
+      </div>
+    </form>
+    <div id="appointmentContainer">
+      <p id="todaysAppointment">目前掛號</p>
+      <div id="appointmentTitleContainer">
+        <div class="appointmentTitle number">#</div>
+        <div class="appointmentTitle id">身分證字號</div>
+        <div class="appointmentTitle name">姓名</div>
+      </div>
+      <div id="appointmentListContainer">
+        <div class="appointmentList">
+          <div class="appointmentContent number">1</div>
+          <div class="appointmentContent id">A123456789</div>
+          <div class="appointmentContent name">江衍</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Modal -->
+  <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalCenterTitle">更新成功!</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">回到看診紀錄列表!!</div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">否 </button>
+          <button type="button" class="btn btn-info" id="gotoRecord">是</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+<script type="text/javascript" crossorigin="anonymous">
+  if (!(localStorage.getItem("isLogin"))) window.location.href = "index.html";
+
+  var url_string = window.location.href;
+  var url = new URL(url_string);
+  var id = url.searchParams.get("id");
+  var patient_id;
+
+  function getRecordData() {
+    $.ajax({
+      type: "GET",
+      url: "http://140.115.81.245:8080/NCU_MIS_SA/api/record.do?id=" + id,
+      crossDomain: true,
+      cache: false,
+      dataType: 'json',
+      timeout: 5000,
+      success: function (response) {
+        if (response.status == 200) {
+          id = response['response']['data'][0]['id'];
+          patient_id = response['response']['data'][0]['patient_id'];
+          // console.log(patient_id)
+          document.getElementById('visited_date').value = response['response']['data'][0]['visited_date'];
+          document.getElementById('RecordSymptoms').value = response['response']['data'][0]['symptoms'];
+          document.getElementById('RecordDegree').value = response['response']['data'][0]['degree'];
+          document.getElementById('RecordDays').value = response['response']['data'][0]['days'];
+          document.getElementById('RecordMedicine_id').value = response['response']['data'][0]['Medicine_id'];
+          document.getElementById('Recorddoctor').value = response['response']['data'][0]['doctor'];
+          document.getElementById('Recordnote').value = response['response']['data'][0]['note'];
+        }
+      },
+      error: function () {
+        alert("無法連線到伺服器！");
+      }
+    });
+  }
+  getRecordData();
+
+  function updateHTML(data) {
+    $("#order_id").html(data['order_info']['id']);
+    $("#create").html(data['order_info']['create']);
+    $("#modify").html(data['order_info']['modify']);
+    $("#email").html(data['order_info']['email']);
+    $("#address").html(data['order_info']['address']);
+    $("#phone").html(data['order_info']['phone']);
+    $("#first_name").html(data['order_info']['first_name']);
+    $("#last_name").html(data['order_info']['last_name']);
+    $("#item").html(data.product_info.length);
+    var total_price = Big(0.0);
+    var quantity = 0;
+    var inner_html = "";
+    $.each(data.product_info, function (k, v) {
+      quantity += v['quantity'];
+      total_price = total_price.plus(v['subtotal']);
+      inner_html += updateOrderProductTable(v);
+    });
+    $("#quantity").html(quantity);
+    $("#total").html(total_price.toString());
+    $("#table > tbody").empty();
+    $("#panel").append(inner_html);
+  }
+
+  function updatePatient(id) {
+    var visited_date = $('#visited_date').val();
+    var RecordSymptoms = $('#RecordSymptoms').val();
+    var RecordDegree = $('#RecordDegree').val();
+    var RecordDays = $('#RecordDays').val();
+    var RecordMedicine_id = $('#RecordMedicine_id').val();
+    var Recorddoctor = $('#Recorddoctor').val();
+    var Recordnote = $('#Recordnote').val();
+    var data_object = {
+      "id": id,
+      "patient_id": patient_id,
+      "visited_date": visited_date,
+      "symptoms": RecordSymptoms,
+      "degree": RecordDegree,
+      "days": RecordDays,
+      "Medicine_id": RecordMedicine_id,
+      "doctor": Recorddoctor,
+      "note": Recordnote,
+      "edited_by": "袁哲瑋"
+    };
+    // 將JSON格式轉換成字串
+    var data_string = JSON.stringify(data_object);
+    // 發出POST的PUT請求
+    $.ajax({
+      type: "PUT",
+      url: "http://140.115.81.245:8080/NCU_MIS_SA/api/record.do",
+      data: data_string,
+      crossDomain: true,
+      cache: false,
+      dataType: 'json',
+      timeout: 5000,
+      success: function (response) {
+        $('#flashMessage').html(response.message);
+        $('#flashMessage').show();
+        if (response.status == 200) {
+          console.log("更新成功")
+          editsuccess();
+        }
+      },
+      error: function () {
+        alert("無法連線到伺服器！");
+      }
+    });
+  }
+
+  function editsuccess() {
+    $('#exampleModalCenter').modal('show');
+  }
+  $('#submit').click(function () {
+    updatePatient(id);
+  });
+  $('#gotoRecord').click(function () {
+    // console.log(patient_id)
+    window.location.href = 'record.html?patient_id=' + patient_id;
+  });
+
+  function updateHTML(data) {
+    $("#patientName").html(data['name']);
+    $("#patientID").html(data['pid']);
+  }
+  $(".logo").click(function () {
+    window.location.href = 'appointment.html';
+  });
+  $(".appointment").click(function () {
+    window.location.href = 'appointment.html';
+  });
+  $(".patient").click(function () {
+    window.location.href = 'patient.html';
+  });
+  $(".medicine").click(function () {
+    window.location.href = 'medicine.html';
+  });
+  $(".hr").click(function () {
+    window.location.href = 'humanResource.html';
+  });
+  $(".personal").click(function () {
+    window.location.href = 'personal.html';
+  });
+  $('#logoutBtn').click(function () {
+    window.location.href = 'logout.html';
+  });
+  $(".patientTable").click(function () {
+    window.location.href = 'patient.html';
+  });
+  $(".recordTable").click(function () {
+    window.location.href = 'record.html?patient_id=' + patient_id;
+  });
+
+</script>
+
+</html>

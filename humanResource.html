@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title></title>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <link rel="stylesheet" type="text/css" href="statics/css/humanResource.css">
+  <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css"
+    integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous" />
+</head>
+
+<body>
+  <div id="logoBar">
+    <img class="logo" src="statics/icon/Charlie_the_unicorn.png" style="cursor: pointer;">
+    <h1 class="logo" style="cursor: pointer;">Charlie Clinic</h1>
+  </div>
+  <div id="navBar">
+    <div class="page appointment">掛號管理系統</div>
+    <div class="page patient">病歷管理系統</div>
+    <div class="page medicine">藥品管理系統</div>
+    <div class="page hr" style="background-color: rgb(178, 166, 142);">人事管理系統</div>
+    <div class="page personal">個人資料頁面</div>
+    <div class="page logout"><button id="logoutBtn" type="button">登出</button></div>
+  </div>
+  <div id="container">
+    <div id="functions">
+      <div id="titleOfSystem">人事管理系統</div>
+      <div class="subFunction table">
+        <i class="fas fa-play"></i>
+        <p style="text-decoration: underline">人事清單列表</p>
+      </div>
+      <div id="search">
+        <input type="text" id="searchTarget" placeholder="搜尋" />
+      </div>
+    </div>
+    <div id="listTitleContainer">
+      <div class="listTitle account">帳號</div>
+      <div class="listTitle name">姓名</div>
+      <div class="listTitle phone">聯絡電話</div>
+      <div class="listTitle position">職位</div>
+    </div>
+    <div id="listContainer">
+    </div>
+  </div>
+</body>
+<script type="text/javascript" crossorigin="anonymous">
+  //functions
+  if (!(localStorage.getItem("isLogin"))) window.location.href = "index.html";
+
+  function updateTable(data, title) {
+    if (title == "doctor") $("#listContainer").empty();
+    var table_html = '';
+    $.each(data, function (index, value) {
+      if (title == "doctor") table_html += '<div class="list" onClick="dirToEdit(this.id, 1)" id="' + value['id'] +
+        '">';
+      else if (title == "pharmacist") table_html += '<div class="list" onClick="dirToEdit(this.id, 2)" id="' +
+        value['id'] + '">';
+      else if (title == "staff") table_html += '<div class="list" onClick="dirToEdit(this.id, 3)" id="' + value[
+        'id'] + '">';
+      table_html += '<div class="listContent account">' + value['account'] + '</div>';
+      table_html += '<div class="listContent name">' + value['name'] + '</div>';
+      table_html += '<div class="listContent phone">0' + value['phone'] + '</div>';
+      if (title == "doctor") table_html += '<div class="listContent position">醫師</div>';
+      else if (title == "pharmacist") table_html += '<div class="listContent position">藥師</div>';
+      else if (title == "staff") table_html += '<div class="listContent position">櫃台行政</div>';
+      table_html += '</div>';
+    })
+    $("#listContainer").append(table_html);
+  }
+
+  function getAllDoctor() {
+    $.ajax({
+      type: "GET",
+      url: "http://140.115.81.245:8080/NCU_MIS_SA/api/doctor.do",
+      crossDomain: true,
+      cache: false,
+      dataType: 'json',
+      timeout: 5000,
+      success: function (response) {
+        if (response.status == 200) {
+          updateTable(response.response.data, "doctor");
+        }
+      },
+      error: function () {
+        alert("無法連線到伺服器！");
+      }
+    });
+  }
+
+  function getDoctorByID(id) {
+    $.ajax({
+      type: "GET",
+      url: "http://140.115.81.245:8080/NCU_MIS_SA/api/doctor.do",
+      data: "id=" + id,
+      crossDomain: true,
+      cache: false,
+      dataType: 'json',
+      timeout: 5000,
+      success: function (response) {
+        if (response.status == 200) {
+          updateTable(response.response.data, "doctor");
+        }
+      },
+      error: function () {
+        console.log("Can't find the doctor");
+      }
+    });
+  }
+
+  function getAllPharmacist() {
+    $.ajax({
+      type: "GET",
+      url: "http://140.115.81.245:8080/NCU_MIS_SA/api/pharmacist.do",
+      crossDomain: true,
+      cache: false,
+      dataType: 'json',
+      timeout: 5000,
+      success: function (response) {
+        if (response.status == 200) {
+          updateTable(response.response.data, "pharmacist");
+        }
+      },
+      error: function () {
+        console.log("Can't find the pharmacist");
+      }
+    });
+  }
+
+  function getPharmacistByID(id) {
+    $.ajax({
+      type: "GET",
+      url: "http://140.115.81.245:8080/NCU_MIS_SA/api/pharmacist.do",
+      data: "id=" + id,
+      crossDomain: true,
+      cache: false,
+      dataType: 'json',
+      timeout: 5000,
+      success: function (response) {
+        if (response.status == 200) {
+          updateTable(response.response.data, "pharmacist");
+        }
+      },
+      error: function () {
+        console.log("Can't find the staff");
+      }
+    });
+  }
+
+  function getAllStaff() {
+    $.ajax({
+      type: "GET",
+      url: "http://140.115.81.245:8080/NCU_MIS_SA/api/administration.do",
+      crossDomain: true,
+      cache: false,
+      dataType: 'json',
+      timeout: 5000,
+      success: function (response) {
+        if (response.status == 200) {
+          updateTable(response.response.data, "staff");
+        }
+      },
+      error: function () {
+        alert("無法連線到伺服器！");
+      }
+    });
+  }
+
+  function getStaffByID(id) {
+    $.ajax({
+      type: "GET",
+      url: "http://140.115.81.245:8080/NCU_MIS_SA/api/administration.do",
+      data: "id=" + id,
+      crossDomain: true,
+      cache: false,
+      dataType: 'json',
+      timeout: 5000,
+      success: function (response) {
+        if (response.status == 200) {
+          updateTable(response.response.data, "staff");
+        }
+      },
+      error: function () {
+        alert("無法連線到伺服器！");
+      }
+    });
+  }
+  getAllDoctor();
+  getAllPharmacist();
+  getAllStaff();
+  // page routing
+  $(".logo").click(function () {
+    window.location.href = 'appointment.html';
+  });
+  $(".appointment").click(function () {
+    window.location.href = 'appointment.html';
+  });
+  $(".patient").click(function () {
+    window.location.href = 'patient.html';
+  });
+  $(".medicine").click(function () {
+    window.location.href = 'medicine.html';
+  });
+  $(".hr").click(function () {
+    window.location.href = 'humanResource.html';
+  });
+  $(".personal").click(function () {
+    window.location.href = 'personal.html';
+  });
+  $('#logoutBtn').click(function () {
+    window.location.href = 'logout.html';
+  });
+  //$(".add").click(function () {
+  //    window.location.href = 'addHr.html';
+  //});
+  $("#searchTarget").bind("keypress", {}, keypressInBox);
+
+  function keypressInBox(e) {
+    var code = (e.keyCode ? e.keyCode : e.which);
+    if (code == 13) {
+      e.preventDefault();
+      $("#listContainer").empty();
+      var target = $("#searchTarget").val();
+      getDoctorByID(target);
+      getPharmacistByID(target);
+      getStaffByID(target);
+    }
+  }
+
+  function dirToEdit(id, title) {
+    window.location.href = 'editHr.html?id=' + id + '&title=' + title;
+  }
+
+</script>
+
+</html>

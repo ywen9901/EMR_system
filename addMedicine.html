@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title></title>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <link rel="stylesheet" type="text/css" href="statics/css/addTemplate.css">
+  <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css"
+    integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous" />
+</head>
+
+<body>
+  <div id="logoBar">
+    <img class="logo" src="statics/icon/Charlie_the_unicorn.png" style="cursor: pointer;">
+    <h1 class="logo" style="cursor: pointer;">Charlie Clinic</h1>
+  </div>
+  <div id="navBar">
+    <div class="page appointment">掛號管理系統</div>
+    <div class="page patient">病歷管理系統</div>
+    <div class="page medicine" style="background-color: rgb(178, 166, 142);">藥品管理系統</div>
+    <div class="page hr">人事管理系統</div>
+    <div class="page personal">個人資料頁面</div>
+    <div class="page logout"><button id="logoutBtn" type="button">登出</button></div>
+  </div>
+  <div id="container">
+    <div id="functions">
+      <div id="titleOfSystem">藥品管理系統</div>
+      <div class="subFunction table">
+        <i class="fas fa-play"></i>
+        <p style="cursor: pointer;">藥品清單列表</p>
+      </div>
+      <div class="subFunction add">
+        <i class="fas fa-plus" style="color: rgb(17, 221, 17);"></i>
+        <p style="text-decoration: underline">新增藥品</p>
+      </div>
+    </div>
+    <div id="formContainer">
+      <form id="appointmentForm" accept-charset="UTF-8">
+        <p id="formTitle">新增藥品</p>
+        <input type="button" value="新增" id="submit" onclick="submitAction()" style="cursor: pointer;">
+        <div id="formTable">
+          <div style="display: none;"><input type="hidden" name="_method" value="POST"></div>
+          <div class="input name required">
+            <label for="medicineName">藥品名稱</label>
+            <input name="name" type="text" id="medicineName" required>
+          </div>
+          <div class="input dose required">
+            <label for="medicineDose">規格量</label>
+            <input name="dose" type="text" id="medicineDose" required>
+          </div>
+          <div class="input catagory required">
+            <label for="medicineCatagory">藥品分類</label>
+            <input name="catagory" type="text" id="medicineCategory" required>
+          </div>
+      </form>
+    </div>
+  </div>
+</body>
+<script type="text/javascript" crossorigin="anonymous">
+  // functions
+  if (!(localStorage.getItem("isLogin"))) window.location.href = "index.html";
+  if (localStorage.getItem("title") != "doctor" && localStorage.getItem("title") != "pharmacist") {
+    alert("無訪問權限");
+    history.go(-1);
+  }
+
+  function submitAction() {
+    var name = $("#medicineName").val();
+    var quantity = $("#medicineDose").val();
+    var category = $("#medicineCategory").val();
+    var dataObject = {
+      "name": name,
+      "quantity": quantity,
+      "category": category
+    };
+    var dataString = JSON.stringify(dataObject);
+    $.ajax({
+      type: "POST",
+      url: "http://140.115.81.245:8080/NCU_MIS_SA/api/medicine.do",
+      data: dataString,
+      crossDomain: true,
+      cache: false,
+      dataType: 'json',
+      timeout: 5000,
+      success: function (response) {
+        if (response.status == 200) {
+          window.location.href = "medicine.html";
+        }
+      },
+      error: function () {
+        alert("Fail to add");
+      }
+    });
+  }
+  // page routing
+  $(".logo").click(function () {
+    window.location.href = 'appointment.html';
+  });
+  $(".appointment").click(function () {
+    window.location.href = 'appointment.html';
+  });
+  $(".patient").click(function () {
+    window.location.href = 'patient.html';
+  });
+  $(".medicine").click(function () {
+    window.location.href = 'medicine.html';
+  });
+  $(".hr").click(function () {
+    window.location.href = 'humanResource.html';
+  });
+  $(".personal").click(function () {
+    window.location.href = 'personal.html';
+  });
+  $('#logoutBtn').click(function () {
+    window.location.href = 'logout.html';
+  });
+  $(".table").click(function () {
+    window.location.href = 'appointment.html';
+  });
+
+</script>
+
+</html>

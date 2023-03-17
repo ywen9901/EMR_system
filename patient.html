@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>病患列表</title>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <link rel="stylesheet" type="text/css" href="statics/css/patient.css">
+  <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css"
+    integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous" />
+</head>
+
+<body>
+  <div id="logoBar">
+    <img class="logo" src="statics/icon/Charlie_the_unicorn.png" style="cursor: pointer;">
+    <h1 class="logo" style="cursor: pointer;">Charlie Clinic</h1>
+  </div>
+  <div id="navBar">
+    <div class="page appointment">掛號管理系統</div>
+    <div class="page patient" style="background-color: rgb(178, 166, 142);">病歷管理系統</div>
+    <div class="page medicine">藥品管理系統</div>
+    <div class="page hr">人事管理系統</div>
+    <div class="page personal">個人資料頁面</div>
+    <div class="page logout"><button id="logoutBtn" type="button">登出</button></div>
+  </div>
+  <div id="container">
+    <div id="functions">
+      <div id="titleOfSystem">病歷管理系統</div>
+      <div class="subFunction table">
+        <i class="fas fa-play"></i>
+        <p style="text-decoration: underline">病患清單列表</p>
+      </div>
+      <div class="subFunction add">
+        <i class="fas fa-plus" style="color: rgb(17, 221, 17);"></i>
+        <p style="cursor: pointer;">新增病歷資料</p>
+      </div>
+      <div id="search">
+        <input type="text" id="searchTarget" placeholder="搜尋" />
+      </div>
+    </div>
+    <div id="listTitleContainer">
+      <div class="listTitle id">身分證字號</div>
+      <div class="listTitle name">姓名</div>
+      <div class="listTitle lastDate">近期看診日期</div>
+    </div>
+    <div id="listContainer">
+      <div class="list">
+        <div class="listContent id">A123456789</div>
+        <div class="listContent name">周靖軒</div>
+        <div class="listContent lastDate">2020/12/20</div>
+      </div>
+    </div>
+  </div>
+</body>
+<script type="text/javascript" crossorigin="anonymous">
+  if (!(localStorage.getItem("isLogin"))) window.location.href = "index.html";
+
+  Date.prototype.format = function (fmt) {
+    var o = {
+      "M+": this.getMonth() + 1, //月份
+      "d+": this.getDate(), //日
+      "h+": this.getHours() % 12 == 0 ? 12 : this.getHours() % 12, //小時
+      "H+": this.getHours(), //小時
+      "m+": this.getMinutes(), //分
+      "s+": this.getSeconds(), //秒
+      "q+": Math.floor((this.getMonth() + 3) / 3), //季度
+      "S": this.getMilliseconds() //毫秒
+    };
+    if (/(y+)/.test(fmt)) fmt = fmt.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));
+    for (var k in o)
+      if (new RegExp("(" + k + ")").test(fmt)) fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : ((
+        "00" + o[k]).substr(("" + o[k]).length)));
+    return fmt;
+  }
+
+  function updateTable(data) {
+    $("#listContainer").empty();
+    var table_html = '';
+    $.each(data, function (index, value) {
+      table_html += '<a  href="editPatient.html?pid=' + value['pid'] +
+        '"class="listContent id" style="text-decoration: none; color:black">' + value['pid'] + '</a>';
+      table_html += '<div class="listContent name">' + value['name'] + '</div>';
+      var datetime = value['create_date'];
+      var date = new Date(datetime).format("yyyy-MM-dd");
+      table_html += '<div class="listContent lastDate">' + date + '</div>';
+    })
+    $("#listContainer").append(table_html);
+  }
+  $(".logo").click(function () {
+    window.location.href = 'appointment.html';
+  });
+  $(".appointment").click(function () {
+    window.location.href = 'appointment.html';
+  });
+  $(".patient").click(function () {
+    window.location.href = 'patient.html';
+  });
+  $(".medicine").click(function () {
+    window.location.href = 'medicine.html';
+  });
+  $(".hr").click(function () {
+    window.location.href = 'humanResource.html';
+  });
+  $(".personal").click(function () {
+    window.location.href = 'personal.html';
+  });
+  $('#logoutBtn').click(function () {
+    window.location.href = 'logout.html';
+  });
+  $(".add").click(function () {
+    window.location.href = 'addPatient.html';
+  });
+  $(".addRecord").click(function () {
+    window.location.href = 'addRecord.html';
+  })
+  $(".list").click(function () {
+    window.location.href = 'certainPatient.html';
+  })
+
+  function getAllPatient() {
+    $.ajax({
+      type: "GET",
+      url: "http://140.115.81.245:8080/NCU_MIS_SA/api/patient.do",
+      crossDomain: true,
+      cache: false,
+      dataType: 'json',
+      timeout: 5000,
+      success: function (response) {
+        if (response.status == 200) {
+          updateTable(response.response.data);
+        }
+      },
+      error: function () {
+        alert("無法連線到伺服器！");
+      }
+    });
+  }
+  getAllPatient();
+  $("#searchTarget").bind("keypress", {}, keypressInBox);
+
+  function keypressInBox(e) {
+    var code = (e.keyCode ? e.keyCode : e.which);
+    if (code == 13) {
+      e.preventDefault();
+      $("#listContainer").empty();
+      var target = $("#searchTarget").val();
+      $.ajax({
+        type: "GET",
+        url: "http://140.115.81.245:8080/NCU_MIS_SA/api/patient.do",
+        data: "pid=" + target,
+        crossDomain: true,
+        cache: false,
+        dataType: 'json',
+        timeout: 5000,
+        success: function (response) {
+          if (response.status == 200) {
+            updateTable(response.response.data);
+          }
+        },
+        error: function () {
+          alert("查無資料");
+        }
+      });
+    }
+  }
+
+</script>
+
+</html>

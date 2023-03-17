@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title></title>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <link rel="stylesheet" type="text/css" href="statics/css/appointment.css">
+  <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css"
+    integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous" />
+</head>
+
+<body>
+  <div id="logoBar">
+    <img class="logo" src="statics/icon/Charlie_the_unicorn.png" style="cursor: pointer;">
+    <h1 class="logo" style="cursor: pointer;">Charlie Clinic</h1>
+  </div>
+  <div id="navBar">
+    <div class="page appointment" style="background-color: rgb(178, 166, 142);">掛號管理系統</div>
+    <div class="page patient">病歷管理系統</div>
+    <div class="page medicine">藥品管理系統</div>
+    <div class="page hr">人事管理系統</div>
+    <div class="page personal" id="personal">個人資料頁面</div>
+    <div class="page logout"><button id="logoutBtn" type="button">登出</button></div>
+  </div>
+  <div id="container">
+    <button type="button" class="btn passNumBtn">過號</button>
+    <button type="button" class="btn deleteBtn">刪除</button>
+    <div id="functions">
+      <div id="titleOfSystem"><input type="date" name="date" value="" id="searching_date"
+          onchange="onchangeDate(event);" style="background: none; font-size: 13px; font-weight: bold; border: 0;">
+      </div>
+      <div class="subFunction table">
+        <i class="fas fa-play"></i>
+        <p style="text-decoration: underline">掛號清單列表</p>
+      </div>
+      <div class="subFunction add">
+        <i class="fas fa-plus" style="color: rgb(17, 221, 17);"></i>
+        <p style="cursor: pointer;">新增掛號</p>
+      </div>
+      <div id="search">
+        <input type="text" id="searchTarget" placeholder="搜尋" />
+      </div>
+      <div id="schedule"> 看診進度 <p id="schedule_num"></p>
+      </div>
+    </div>
+    <div id="listTitleContainer">
+      <div class="listTitle name">姓名</div>
+      <div class="listTitle pid">身分證字號</div>
+      <div class="listTitle doctor">看診醫師</div>
+      <div class="listTitle clinic_hours">時段</div>
+      <div class="listTitle appointment_number">看診序號</div>
+      <div class="listTitle checker">選取</div>
+    </div>
+    <div id="listContainer">
+    </div>
+  </div>
+</body>
+<script type="text/javascript" crossorigin="anonymous">
+  // 取得網址參數
+  var url_string = window.location.href;
+  var url = new URL(url_string);
+  var id = url.searchParams.get("id");
+  var searching_date = getDay();
+  var sql_num = 0;
+  // 更新掛號列表表格
+  function updateTable(data) {
+    $("#listContainer").empty();
+    var table_html = '';
+    var table_html_schedule = '';
+    //更新看診進度
+    if (data[0] != null) {
+      document.getElementById("schedule_num").innerHTML = data[0].appointment_number;
+    } else {
+      document.getElementById("schedule_num").innerHTML = "無";
+    }
+    $.each(data, function (index = 0, value) {
+      table_html += '<div class="list">';
+      table_html += '<div class="listContent name">' + value['name'] + '</div>';
+      table_html += '<div class="listContent pid">' + value['pid'] + '</div>';
+      table_html += '<div class="listContent doctor">' + value['doctor_name'] + '</div>';
+      table_html += '<div class="listContent clinic_hours">' + value['clinic_hours'] + '</div>';
+      table_html += '<div class="listContent appointment_number">' + value['appointment_number'] + '</div>';
+      table_html +=
+        '<div class="listContent checker" style="margin-left: 2%;"><input type="checkbox" name="checkboxs" value="' +
+        value['done'] + '" id="' + value['id'] + '"' + '></div></div>';
+    })
+    $("#listContainer").append(table_html);
+  }
+
+  function getAllAppointment() {
+    // 發出POST的GET請求取得所有掛號列表
+    $.ajax({
+      type: "GET",
+      url: "http://140.115.81.245:8080/NCU_MIS_SA/api/appointment.do?searching_date=" + searching_date,
+      crossDomain: true,
+      cache: false,
+      dataType: 'json',
+      timeout: 5000,
+      success: function (response) {
+        if (response.status == 200) {
+          updateTable(response.response.data);
+        }
+        console.log(response);
+      },
+      error: function () {
+        alert("無法連線到伺服器！");
+      }
+    });
+  }
+
+  function passAppointment(id, visited_date) {
+    var check = window.confirm("確認病患過號？");
+    if (check == true) {
+      console.log("You pressed OK!");
+      var request = {
+        'id': id,
+        'visited_date': visited_date
+      };
+      var data_string = JSON.stringify(request);
+      $.ajax({
+        type: "PUT",
+        url: "http://140.115.81.245:8080/NCU_MIS_SA/api/appointment.do",
+        crossDomain: true,
+        data: data_string,
+        cache: false,
+        dataType: 'json',
+        timeout: 5000,
+        success: function (response) {
+          if (response.status == 200) {
+            $("#flashMessage").html("成功! 已經成功處理過號...");
+            $("#flashMessage").show();
+            getAllAppointment();
+          }
+          console.log(response);
+        },
+        error: function () {
+          alert("無法連線到伺服器！");
+        }
+      });
+    } else {
+      console.log("You pressed Cancel!");
+    }
+  }
+
+  function deleteAppointment(id, done) {
+    var check = window.confirm("確認刪除掛號？");
+    if (check == true) {
+      console.log("You pressed OK!");
+      var request = {
+        'id': id,
+        "done": done
+      };
+      var data_string = JSON.stringify(request);
+      $.ajax({
+        type: "DELETE",
+        url: "http://140.115.81.245:8080/NCU_MIS_SA/api/appointment.do",
+        crossDomain: true,
+        data: data_string,
+        cache: false,
+        dataType: 'json',
+        timeout: 5000,
+        success: function (response) {
+          if (response.status == 200) {
+            $("#flashMessage").html("成功! 已經成功刪除掛號...");
+            $("#flashMessage").show();
+            getAllAppointment();
+          }
+          console.log(response);
+        },
+        error: function () {
+          alert("無法連線到伺服器！");
+        }
+      });
+    } else {
+      console.log("You pressed Cancel!");
+    }
+  }
+
+  function sendInfoById(appointmentID) {
+    var id = appointmentID;
+    //console.log(id);
+    var send_value = [];
+    $.ajax({
+      type: "GET",
+      url: "http://140.115.81.245:8080/NCU_MIS_SA/api/appointment.do",
+      crossDomain: true,
+      data: "id=" + id,
+      cache: false,
+      async: false,
+      dataType: 'json',
+      timeout: 5000,
+      success: function (response) {
+        if (response.status == 200) {
+          //console.log(response.response.data);
+          send_value.push(id);
+          send_value.push(response.response.data[0].visited_date);
+          send_value.push(response.response.data[0].done);
+        }
+      },
+      error: function () {
+        alert("無法連線到伺服器！");
+      }
+    });
+    return send_value;
+  }
+  //alert(event.target.value);
+  function onchangeDate(date) {
+    searching_date = date.target.value;
+    getAllAppointment();
+  }
+  //取得本日日期
+  function getDay() {
+    var ddd = new Date();
+    var day = ddd.getDate();
+    var month = ddd.getMonth() + 1;
+    if (ddd.getMonth() < 10) {
+      var month = "0" + (ddd.getMonth() + 1);
+    }
+    if (ddd.getDate() < 10) {
+      day = "0" + ddd.getDate();
+    }
+    var datew = ddd.getFullYear() + "-" + month + "-" + day;
+    var datew = datew.toString();
+    $("[name=date]").val(datew);
+    return datew;
+  }
+  getAllAppointment();
+  //過號
+  $(".passNumBtn").click(function () {
+    var cks = document.getElementsByName("checkboxs");
+    for (var i = 0; i < cks.length; i++) {
+      if (cks[i].checked) {
+        //console.log(cks[i].id);
+        id = cks[i].id;
+        visited_date = sendInfoById(id)[1];
+        //console.log(visited_date);
+      }
+    }
+    passAppointment(id, visited_date);
+  });
+  //刪除
+  $(".deleteBtn").click(function () {
+    var cks = document.getElementsByName("checkboxs");
+    for (var i = 0; i < cks.length; i++) {
+      if (cks[i].checked) {
+        //console.log(cks[i].id);
+        id = cks[i].id;
+        done = sendInfoById(id)[2];
+        //console.log(done);
+      }
+    }
+    deleteAppointment(id, done);
+  });
+  $(".logo").click(function () {
+    window.location.href = 'appointment.html';
+  });
+  $(".appointment").click(function () {
+    window.location.href = 'appointment.html';
+  });
+  $(".patient").click(function () {
+    window.location.href = 'patient.html';
+  });
+  $(".medicine").click(function () {
+    window.location.href = 'medicine.html';
+  });
+  $(".hr").click(function () {
+    window.location.href = 'humanResource.html';
+  });
+  $("#personal").click(function () {
+    window.location.href = 'personal.html';
+  });
+  $('#logoutBtn').click(function () {
+    window.location.href = 'logout.html';
+  });
+  $(".add").click(function () {
+    window.location.href = 'addAppointment.html';
+  });
+  $("#searchTarget").bind("keypress", {}, keypressInBox);
+
+  function keypressInBox(e) {
+    var code = (e.keyCode ? e.keyCode : e.which);
+    if (code == 13) {
+      e.preventDefault();
+      $("#listContainer").empty();
+      var target = $("#searchTarget").val();
+      $.ajax({
+        type: "GET",
+        url: "http://140.115.81.245:8080/NCU_MIS_SA/api/appointment.do",
+        data: "pid=" + target,
+        crossDomain: true,
+        cache: false,
+        dataType: 'json',
+        timeout: 5000,
+        success: function (response) {
+          if (response.status == 200) {
+            updateTable(response.response.data);
+          }
+        },
+        error: function () {
+          alert("無法連線到伺服器！");
+        }
+      });
+    }
+  }
+
+</script>
+
+</html>

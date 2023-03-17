@@ -1,0 +1,157 @@
+#logoBar {
+  margin-top: -10px;
+  background-color: rgb(246, 244, 244);
+  width: 100%;
+  height: 110px;
+  position: relative;
+}
+
+#logoBar img {
+  width: 80px;
+  position: absolute;
+  left: 100px;
+  top: 10px;
+}
+
+#logoBar h1 {
+  position: absolute;
+  left: 200px;
+  top: 38px;
+  font-family: "Times New Roman";
+  font-weight: bold;
+  color: rgb(145, 96, 0);
+}
+
+.logo {
+  cursor: pointer;
+}
+
+#navBar {
+  position: absolute;
+  background-color: rgb(145, 96, 0);
+  left: 10%;
+  top: 140px;
+  width: 80%;
+  height: 50px;
+  padding-left: 2%;
+}
+
+.page {
+  font-size: 18px;
+  color: white;
+  height: 100%;
+  line-height: 50px;
+  padding: 0% 3%;
+  display: inline-block;
+  cursor: pointer;
+}
+
+.page:hover {
+  text-decoration: underline;
+}
+
+#logoutBtn {
+  border: 0;
+  background-color: white;
+  color: rgb(145, 96, 0);
+  border-radius: 20px;
+  font-size: 15px;
+  font-weight: bold;
+  padding: 5px 35px;
+}
+
+#container {
+  position: relative;
+  background-color: rgb(246, 244, 244);
+  height: 680px;
+  width: 80%;
+  position: absolute;
+  left: 10%;
+  top: 220px;
+}
+
+#functions {
+  width: 15%;
+  margin-top: 30px;
+  margin-left: 30px;
+  position: relative;
+}
+
+#titleOfSystem {
+  background-color: rgb(210, 193, 159);
+  font-size: 18px;
+  border-radius: 15px;
+  height: 50px;
+  line-height: 50px;
+  text-align: center;
+  font-weight: bold;
+}
+
+.table {
+  margin-top: 10px;
+}
+
+.subFunction {
+  padding: 0% 10%;
+  margin-left: 8px;
+}
+
+.subFunction p {
+  padding: 0% 5%;
+  display: inline-block;
+  font-weight: bold;
+}
+
+#formContainer {
+  position: absolute;
+  top: 30px;
+  left: 23%;
+  width: 72%;
+  /* height: 450px; */
+}
+
+#formTitle {
+  padding-bottom: 10px;
+  border-bottom: 2px solid #916000;
+  font-weight: bold;
+}
+
+#formTable {
+  padding: 2%;
+  /* height: 350px; */
+  overflow-y: scroll;
+}
+
+#formTable::-webkit-scrollbar {
+  display: none;
+}
+
+input {
+  margin: 10px 10px;
+}
+
+select {
+  margin: 15px 10px;
+}
+
+
+
+.listContent {
+  display: inline-block;
+  width: 100%;
+  height: 30px;
+}
+
+.listTitle {
+  width: 20%;
+  line-height: 30px;
+  font-weight: bold;
+}
+
+.listInfo {
+  position: relative;
+  left: 20%;
+  top: -30px;
+  width: 40%;
+  line-height: 30px;
+}

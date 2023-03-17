@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title></title>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <link rel="stylesheet" type="text/css" href="statics/css/addRecord.css">
+  <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css"
+    integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous" />
+</head>
+
+<body>
+  <div id="logoBar">
+    <img class="logo" src="statics/icon/Charlie_the_unicorn.png" style="cursor: pointer;">
+    <h1 class="logo" style="cursor: pointer;">Charlie Clinic</h1>
+  </div>
+  <div id="navBar">
+    <div class="page appointment">掛號管理系統</div>
+    <div class="page patient" style="background-color: rgb(178, 166, 142);">病歷管理系統</div>
+    <div class="page medicine">藥品管理系統</div>
+    <div class="page hr">人事管理系統</div>
+    <div class="page personal">個人資料頁面</div>
+    <div class="page logout"><button id="logoutBtn" type="button">登出</button></div>
+  </div>
+  <div id="container">
+    <div id="functions">
+      <div id="titleOfSystem">病歷管理系統</div>
+      <div class="subFunction patientTable">
+        <i class="fas fa-play"></i>
+        <p style="padding-top: 10px; cursor: pointer;">檢視所有病歷</p>
+      </div>
+      <div class="subFunction patientInfo">
+        <i class="fas fa-play"></i>
+        <p style="cursor: pointer;">病患基本資料</p>
+      </div>
+      <div class="subFunction recordTable">
+        <i class="fas fa-play"></i>
+        <p style="cursor: pointer;">看診紀錄列表</p>
+      </div>
+    </div>
+    <form>
+      <div id="listTitleContainer">
+        <div class="listTitle addRecord">檢視看診紀錄</div>
+      </div>
+      <div id="infoContainer">
+        <div class="infoContent">
+          <div class="infoContent">
+            <div class="listTitle">姓名</div>
+            <div class="listInfo" id="patientName">王小明</div>
+          </div>
+          <div class="infoContent">
+            <div class="listTitle">身分證字號</div>
+            <div class="listInfo" id="patientID">A123456789</div>
+          </div>
+          <div class="infoContent">
+            <div class="listTitle">性別</div>
+            <div class="listInfo" id="patientGender">男</div>
+          </div>
+          <div class="infoContent">
+            <div class="listTitle">看診日期</div>
+            <div class="listInfo" id="date">20201220</div>
+          </div>
+          <div class="infoContent">
+            <div class="listTitle">特殊病史</div>
+            <div class="listInfo" id="patientSpecialDisease">高血壓</div>
+          </div>
+          <div class="infoContent">
+            <div class="listTitle">過敏藥物</div>
+            <div class="listInfo" id="patientDrugAllergy">無</div>
+          </div>
+          <div class="infoContent">
+            <div class="listTitle">症狀</div>
+            <div class="listInfo" id="symptoms">testtesttest</div>
+          </div>
+          <div class="infoContent">
+            <div class="listTitle">嚴重程度</div>
+            <div class="listInfo" id="degree">testtesttest</div>
+          </div>
+          <div class="infoContent">
+            <div class="listTitle">處方箋</div>
+            <div class="listInfo" id="prescription">testtesttest</div>
+          </div>
+          <div class="infoContent">
+            <div class="listTitle">其他備註</div>
+            <div class="listInfo" id="note">testtesttest</div>
+          </div>
+        </div>
+      </div>
+    </form>
+    <div id="appointmentContainer">
+      <p id="todaysAppointment">目前掛號</p>
+      <div id="appointmentTitleContainer">
+        <div class="appointmentTitle number">#</div>
+        <div class="appointmentTitle id">身分證字號</div>
+        <div class="appointmentTitle name">姓名</div>
+      </div>
+      <div id="appointmentListContainer">
+        <div class="appointmentList">
+          <div class="appointmentContent number">1</div>
+          <div class="appointmentContent id">A123456789</div>
+          <div class="appointmentContent name">江衍</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+<script type="text/javascript" crossorigin="anonymous">
+  if (!(localStorage.getItem("isLogin"))) window.location.href = "index.html";
+  $(".logo").click(function () {
+    window.location.href = 'appointment.html';
+  });
+  $(".appointment").click(function () {
+    window.location.href = 'appointment.html';
+  });
+  $(".patient").click(function () {
+    window.location.href = 'patient.html';
+  });
+  $(".medicine").click(function () {
+    window.location.href = 'medicine.html';
+  });
+  $(".hr").click(function () {
+    window.location.href = 'humanResource.html';
+  });
+  $(".personal").click(function () {
+    window.location.href = 'personal.html';
+  });
+  $('#logoutBtn').click(function () {
+    window.location.href = 'logout.html';
+  });
+  $(".patientTable").click(function () {
+    window.location.href = 'patient.html';
+  });
+  $(".patientInfo").click(function () {
+    window.location.href = 'certainPatient.html';
+  });
+  $(".recordTable").click(function () {
+    window.location.href = 'record.html';
+  });
+
+</script>
+
+</html>

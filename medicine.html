@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title></title>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <link rel="stylesheet" type="text/css" href="statics/css/medicine.css">
+  <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css"
+    integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous" />
+</head>
+
+<body>
+  <div id="logoBar">
+    <img class="logo" src="statics/icon/Charlie_the_unicorn.png" style="cursor: pointer;">
+    <h1 class="logo" style="cursor: pointer;">Charlie Clinic</h1>
+  </div>
+  <div id="navBar">
+    <div class="page appointment">掛號管理系統</div>
+    <div class="page patient">病歷管理系統</div>
+    <div class="page medicine" style="background-color: rgb(178, 166, 142);">藥品管理系統</div>
+    <div class="page hr">人事管理系統</div>
+    <div class="page personal">個人資料頁面</div>
+    <div class="page logout"><button id="logoutBtn" type="button">登出</button></div>
+  </div>
+  <div id="container">
+    <button type="button" class="btn deleteBtn" onclick="deleteAction()">刪除</button>
+    <div id="functions">
+      <div id="titleOfSystem">藥品管理系統</div>
+      <div class="subFunction table">
+        <i class="fas fa-play"></i>
+        <p style="text-decoration: underline">藥品清單列表</p>
+      </div>
+      <div class="subFunction add">
+        <i class="fas fa-plus" style="color: rgb(17, 221, 17);"></i>
+        <p style="cursor: pointer;">新增藥品</p>
+      </div>
+      <div id="search">
+        <input type="text" id="searchTarget" placeholder="搜尋" />
+      </div>
+    </div>
+    <div id="listTitleContainer">
+      <div class="listTitle id">藥品編號</div>
+      <div class="listTitle name">藥品名稱</div>
+      <div class="listTitle quantity">規格量</div>
+      <div class="listTitle category">藥品分類</div>
+      <div class="listTitle update">更新日期</div>
+      <div class="listTitle checker">選取</div>
+    </div>
+    <div id="listContainer">
+    </div>
+  </div>
+</body>
+<script type="text/javascript" crossorigin="anonymous">
+  // functions
+  if (!(localStorage.getItem("isLogin"))) window.location.href = "index.html";
+
+  function updateTable(data) {
+    $("#listContainer").empty();
+    var table_html = '';
+    $.each(data, function (index, value) {
+      table_html += '<div class="list">';
+      table_html += '<div class="listContent id" onClick="dirToEdit(this.id)" id="' + value['id'] + '">' + value[
+        'id'] + '</div>';
+      table_html += '<div class="listContent name" onClick="dirToEdit(this.id)" id="' + value['id'] + '">' + value[
+        'name'] + '</div>';
+      table_html += '<div class="listContent quantity" onClick="dirToEdit(this.id)" id="' + value['id'] + '">' +
+        value['quantity'] + '</div>';
+      table_html += '<div class="listContent category" onClick="dirToEdit(this.id)" id="' + value['id'] + '">' +
+        value['category'] + '</div>';
+      table_html += '<div class="listContent update" onClick="dirToEdit(this.id)" id="' + value['id'] + '">' +
+        value['modify_date'] + '</div>';
+      table_html +=
+        '<div class="listContent checker" style="margin-left: 2%;"><input type="checkbox" name="deleteck" id="' +
+        value["id"] + '"></div></div>';
+    })
+    $("#listContainer").append(table_html);
+  }
+
+  function getAllMedicine() {
+    $.ajax({
+      type: "GET",
+      url: "http://140.115.81.245:8080/NCU_MIS_SA/api/medicine.do",
+      crossDomain: true,
+      cache: false,
+      dataType: 'json',
+      timeout: 5000,
+      success: function (response) {
+        if (response.status == 200) {
+          updateTable(response.response.data);
+        }
+      },
+      error: function () {
+        alert("無法連線到伺服器！");
+      }
+    });
+  }
+  getAllMedicine();
+
+  function deleteMedicineByID(medicineID) {
+    var dataObject = {
+      "id": medicineID
+    };
+    var dataString = JSON.stringify(dataObject);
+    $.ajax({
+      type: "DELETE",
+      url: "http://140.115.81.245:8080/NCU_MIS_SA/api/medicine.do",
+      data: dataString,
+      crossDomain: true,
+      cache: false,
+      dataType: 'json',
+      timeout: 5000,
+      success: function (response) {
+        if (response.status == 200) {
+          location.reload();
+        }
+      },
+      error: function () {
+        alert("Fail to delete");
+      }
+    });
+  }
+
+  function deleteAction() {
+    var cks = document.getElementsByName("deleteck");
+    for (var i = 0; i < cks.length; i++) {
+      if (cks[i].checked) {
+        console.log(cks[i].id);
+        deleteMedicineByID(cks[i].id);
+      }
+    }
+  }
+  // page routing
+  $(".logo").click(function () {
+    window.location.href = 'appointment.html';
+  });
+  $(".appointment").click(function () {
+    window.location.href = 'appointment.html';
+  });
+  $(".patient").click(function () {
+    window.location.href = 'patient.html';
+  });
+  $(".medicine").click(function () {
+    window.location.href = 'medicine.html';
+  });
+  $(".hr").click(function () {
+    window.location.href = 'humanResource.html';
+  });
+  $(".personal").click(function () {
+    window.location.href = 'personal.html';
+  });
+  $('#logoutBtn').click(function () {
+    window.location.href = 'logout.html';
+  });
+  $(".add").click(function () {
+    window.location.href = 'addMedicine.html';
+  });
+  $(".list").click(function () {
+    window.location.href = 'editMedicine.html';
+  });
+  $("#searchTarget").bind("keypress", {}, keypressInBox);
+
+  function keypressInBox(e) {
+    var code = (e.keyCode ? e.keyCode : e.which);
+    if (code == 13) {
+      e.preventDefault();
+      $("#listContainer").empty();
+      var target = $("#searchTarget").val();
+      $.ajax({
+        type: "GET",
+        url: "http://140.115.81.245:8080/NCU_MIS_SA/api/medicine.do",
+        data: "id=" + target,
+        crossDomain: true,
+        cache: false,
+        dataType: 'json',
+        timeout: 5000,
+        success: function (response) {
+          if (response.status == 200) {
+            updateTable(response.response.data);
+          }
+        },
+        error: function () {
+          alert("查無資料");
+        }
+      });
+    }
+  }
+
+  function dirToEdit(id) {
+    window.location.href = 'editMedicine.html?id=' + id;
+  }
+
+</script>
+
+</html>

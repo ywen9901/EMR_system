@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>病患基本資料</title>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <link rel="stylesheet" type="text/css" href="statics/css/certainPatient.css">
+  <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css"
+    integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous" />
+</head>
+
+<body>
+  <div id="logoBar">
+    <img class="logo" src="statics/icon/Charlie_the_unicorn.png" style="cursor: pointer;">
+    <h1 class="logo" style="cursor: pointer;">Charlie Clinic</h1>
+  </div>
+  <div id="navBar">
+    <div class="page appointment">掛號管理系統</div>
+    <div class="page patient" style="background-color: rgb(178, 166, 142);">病歷管理系統</div>
+    <div class="page medicine">藥品管理系統</div>
+    <div class="page hr">人事管理系統</div>
+    <div class="page personal">個人資料頁面</div>
+    <div class="page logout"><button id="logoutBtn" type="button">登出</button></div>
+  </div>
+  <div id="container">
+    <div id="functions">
+      <div id="titleOfSystem">病歷管理系統</div>
+      <div class="subFunction patientTable">
+        <i class="fas fa-play"></i>
+        <p style="padding-top: 10px; cursor: pointer;">檢視所有病歷</p>
+      </div>
+      <div class="subFunction patientInfo">
+        <i class="fas fa-play"></i>
+        <p style="text-decoration: underline;">病患基本資料</p>
+      </div>
+      <div class="subFunction recordTable">
+        <i class="fas fa-play"></i>
+        <p style="cursor: pointer;">看診紀錄列表</p>
+      </div>
+    </div>
+    <form>
+      <div id="listTitleContainer">
+        <div class="listTitle addRecord">病患基本資料</div>
+        <input type="button" value="修改資料" id="submit">
+      </div>
+      <div id="infoContainer">
+        <div class="info">
+          <div class="infoContent">
+            <div class="listTitle">姓名</div>
+            <div class="listInfo" id="patientName">{{patientName}}</div>
+          </div>
+          <div class="infoContent">
+            <div class="listTitle">身分證字號</div>
+            <div class="listInfo" id="patientID">{{patientID}}</div>
+          </div>
+          <div class="infoContent">
+            <div class="listTitle">性別</div>
+            <div class="listInfo" id="patientGender">{{patientGender}}</div>
+          </div>
+          <div class="infoContent">
+            <div class="listTitle">出生年月日</div>
+            <div class="listInfo" id="patientDob">{{patientDob}}</div>
+          </div>
+          <div class="infoContent">
+            <div class="listTitle">血型</div>
+            <div class="listInfo" id="patientBloodType">{{patientBloodType}}</div>
+          </div>
+          <div class="infoContent">
+            <div class="listTitle">聯絡電話</div>
+            <div class="listInfo" id="patientPhone">{{patientPhone}}</div>
+          </div>
+          <div class="infoContent">
+            <div class="listTitle">聯絡地址</div>
+            <div class="listInfo" id="patientAddress">{{patientAddress}}</div>
+          </div>
+          <div class="infoContent">
+            <div class="listTitle">特殊疾病</div>
+            <div class="listInfo" id="patientSpecialDisease">{{patientSpecialDisease}}</div>
+          </div>
+          <div class="infoContent">
+            <div class="listTitle">過敏藥物</div>
+            <div class="listInfo" id="patientDrugAllergy">{{patientDrugAllergy}}</div>
+          </div>
+        </div>
+      </div>
+    </form>
+    <div id="appointmentContainer">
+      <p id="todaysAppointment">目前掛號</p>
+      <div id="appointmentTitleContainer">
+        <div class="appointmentTitle number">#</div>
+        <div class="appointmentTitle id">身分證字號</div>
+        <div class="appointmentTitle name">姓名</div>
+      </div>
+      <div id="appointmentListContainer">
+      </div>
+    </div>
+  </div>
+</body>
+<script type="text/javascript" crossorigin="anonymous">
+  if (!(localStorage.getItem("isLogin"))) window.location.href = "index.html";
+
+  var url_string = window.location.href;
+  var url = new URL(url_string);
+  var id = url.searchParams.get("patient_id");
+  // console.log(id)
+
+  function getPatientData() {
+    $.ajax({
+      type: "GET",
+      url: "http://140.115.81.245:8080/NCU_MIS_SA/api/patient.do",
+      data: "id=" + id,
+      crossDomain: true,
+      cache: false,
+      dataType: 'json',
+      timeout: 5000,
+      success: function (response) {
+        if (response.status == 200) {
+          updateHTML(response.response.data);
+        }
+      },
+      error: function () {
+        alert("無法連線到伺服器！");
+      }
+    });
+  }
+  getPatientData()
+
+  function getDay() {
+    var ddd = new Date();
+    var day = ddd.getDate();
+    var month = ddd.getMonth() + 1;
+    if (ddd.getMonth() < 10) {
+      var month = "0" + (ddd.getMonth() + 1);
+    }
+    if (ddd.getDate() < 10) {
+      day = "0" + ddd.getDate();
+    }
+    var datew = ddd.getFullYear() + "-" + month + "-" + day;
+    var datew = datew.toString();
+    $("[name=date]").val(datew);
+    return datew;
+  }
+
+  function updateAppointment(data) {
+    $("#appointmentListContainer").empty();
+    var table_html = '';
+    console.log("updating");
+    $.each(data, function (index, value) {
+      table_html += '<div class="appointmentList" style="padding-bottom: 15px;"><div class="appointmentContent number">' + value["appointment_number"] + '</div>';
+      table_html += '<div class="appointmentContent id">' + value["pid"] + '</div>';
+      table_html += '<div class="appointmentContent name">' + value["name"] + '</div></div>';
+    })
+    $("#appointmentListContainer").append(table_html);
+  }
+
+  function getAllAppointment() {
+    // 發出POST的GET請求取得所有掛號列表
+    $.ajax({
+      type: "GET",
+      url: "http://140.115.81.245:8080/NCU_MIS_SA/api/appointment.do?searching_date=" + getDay(),
+      crossDomain: true,
+      cache: false,
+      dataType: 'json',
+      timeout: 5000,
+      success: function (response) {
+        if (response.status == 200) {
+          updateAppointment(response.response.data);
+        }
+        console.log(response);
+      },
+      error: function () {
+        alert("無法連線到伺服器！");
+      }
+    });
+  }
+
+  getAllAppointment();
+
+  function updateHTML(data) {
+    console.log(data[0]['name'])
+    $("#patientName").html(data[0]['name']);
+    $("#patientID").html(data[0]['pid']);
+    $("#patientGender").html(data[0]['gender']);
+    $("#patientDob").html(data[0]['dob']);
+    $("#patientBloodType").html(data[0]['bloodType']);
+    $("#patientPhone").html(data[0]['phone']);
+    $("#patientAddress").html(data[0]['address']);
+    $("#patientDrugAllergy").html(data[0]['drugAllergy']);
+    $("#patientSpecialDisease").html(data[0]['specialDisease']);
+  }
+  $(".logo").click(function () {
+    window.location.href = 'appointment.html';
+  });
+  $(".appointment").click(function () {
+    window.location.href = 'appointment.html';
+  });
+  $(".patient").click(function () {
+    window.location.href = 'patient.html';
+  });
+  $(".medicine").click(function () {
+    window.location.href = 'medicine.html';
+  });
+  $(".hr").click(function () {
+    window.location.href = 'humanResource.html';
+  });
+  $(".personal").click(function () {
+    window.location.href = 'personal.html';
+  });
+  $('#logoutBtn').click(function () {
+    window.location.href = 'logout.html';
+  });
+  $(".patientTable").click(function () {
+    window.location.href = 'patient.html';
+  });
+  $(".recordTable").click(function () {
+    window.location.href = 'record.html?patient_id=' + id;
+  });
+  $("#submit").click(function () {
+    window.location.href = 'editPatient.html';
+  });
+
+</script>
+
+</html>

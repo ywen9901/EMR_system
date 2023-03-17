@@ -1,0 +1,94 @@
+body {
+    background-color: rgb(246, 244, 244);
+    margin-top: 0;
+}
+
+#rightContainter {
+    width: 60vw;
+    position: absolute;
+    right: 0%;
+    text-align: right;
+}
+
+#upperContainer {
+    width: 25vw;
+    padding: 6% 5% 2% 10%;    
+    display: inline-block;
+}
+
+#titleForm {
+    position: absolute;
+    top: 180px;
+    margin-left: 140px;
+}
+
+#titleForm select {
+    font-size: 15px;
+    color: rgb(145, 96, 0);
+    background-color: rgb(246, 244, 244);
+    border: 0;
+    border-bottom: 2px solid rgb(145, 96, 0);
+}
+
+#inputContainer {
+    width: 18vw;
+    padding: 0% 10%;
+}
+
+#inputContainer h3 {
+    color:  rgb(112, 112, 112);
+    width: 100%;
+    padding: 5px;
+}
+
+input {
+    background-color: rgb(246, 244, 244);
+    outline: none;
+    border: 0;
+    border-bottom: 2px solid rgb(112, 112, 112);
+}
+
+.input {
+    width: 100%;
+    padding: 20px;
+}
+
+.input label {
+    color: rgb(112, 112, 112);
+    font-weight: bold;
+}
+
+.input input {
+    font-size: 20px;
+    height: 30px;
+}
+
+.submit {
+    width: 100%;
+    height: 20px;
+    padding: 15px;
+    position: relative;
+}
+
+.submit a {
+    line-height: 30px;
+    font-weight: bold;
+    position: absolute;
+    left: 20px;
+    top: 20px;
+    color: rgb(145, 96, 0);
+}
+
+#submit {
+    position: absolute;
+    right: 0px;
+    cursor: pointer;
+    padding: 5px 30px;
+    background: rgb(145, 96, 0);
+    color: white;
+    font-weight: bold;
+    font-size: 15px;
+    border: 0 none;
+    -webkit-border-radius: 20px;
+    border-radius: 20px;
+}

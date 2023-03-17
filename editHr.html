@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title></title>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <link rel="stylesheet" type="text/css" href="statics/css/addTemplate.css">
+  <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css"
+    integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous" />
+</head>
+
+<body>
+  <div id="logoBar">
+    <img class="logo" src="statics/icon/Charlie_the_unicorn.png" style="cursor: pointer;">
+    <h1 class="logo" style="cursor: pointer;">Charlie Clinic</h1>
+  </div>
+  <div id="navBar">
+    <div class="page appointment">掛號管理系統</div>
+    <div class="page patient">病歷管理系統</div>
+    <div class="page medicine">藥品管理系統</div>
+    <div class="page hr" style="background-color: rgb(178, 166, 142);">人事管理系統</div>
+    <div class="page personal">個人資料頁面</div>
+    <div class="page logout"><button id="logoutBtn" type="button">登出</button></div>
+  </div>
+  <div id="container">
+    <div id="functions">
+      <div id="titleOfSystem">人事管理系統</div>
+      <div class="subFunction table">
+        <i class="fas fa-play"></i>
+        <p style="cursor: pointer;">人事清單列表</p>
+      </div>
+    </div>
+    <div id="formContainer">
+      <form id="appointmentForm" accept-charset="UTF-8">
+        <p id="formTitle">修改人事</p>
+        <input type="button" value="返回" id="submit" style="cursor: pointer;">
+        <div id="formTable">
+          <input type="hidden" name="_method" value="POST">
+          <div class="listContent">
+            <div class="listTitle">帳號</div>
+            <div class="listInfo account"></div>
+          </div>
+          <div class="listContent">
+            <div class="listTitle">姓名</div>
+            <div class="listInfo name"></div>
+          </div>
+          <div class="listContent">
+            <div class="listTitle">生日</div>
+            <div class="listInfo dob"></div>
+          </div>
+          <div class="listContent">
+            <div class="listTitle">聯絡電話</div>
+            <div class="listInfo phone"></div>
+          </div>
+          <div class="listContent">
+            <div class="listTitle">聯絡地址</div>
+            <div class="listInfo address"></div>
+          </div>
+          <div class="listContent">
+            <div class="listTitle">職稱</div>
+            <div class="listInfo title"></div>
+          </div>
+      </form>
+    </div>
+  </div>
+</body>
+<script type="text/javascript" crossorigin="anonymous">
+  // function
+  if (!(localStorage.getItem("isLogin"))) window.location.href = "index.html";
+  var getUrlString = location.href;
+  var url = new URL(getUrlString);
+  var id = url.searchParams.get('id');
+  var title = url.searchParams.get('title');
+
+  function updateTable(data, title) {
+    $.each(data, function (index, value) {
+      $(".account").append(value["account"]);
+      $(".name").append(value["name"]);
+      $(".dob").append(value["dob"]);
+      $(".phone").append("0" + value["phone"]);
+      $(".address").append(value["address"]);
+      $(".title").append(title);
+    })
+  }
+
+  function getDoctorByID() {
+    $.ajax({
+      type: "GET",
+      url: "http://140.115.81.245:8080/NCU_MIS_SA/api/doctor.do",
+      data: "id=" + id,
+      crossDomain: true,
+      cache: false,
+      dataType: 'json',
+      timeout: 5000,
+      success: function (response) {
+        if (response.status == 200) {
+          updateTable(response.response.data, "醫生");
+        }
+      },
+      error: function () {
+        alert("查無資料");
+      }
+    });
+  }
+
+  function getPharmacistByID() {
+    $.ajax({
+      type: "GET",
+      url: "http://140.115.81.245:8080/NCU_MIS_SA/api/pharmacist.do",
+      data: "id=" + id,
+      crossDomain: true,
+      cache: false,
+      dataType: 'json',
+      timeout: 5000,
+      success: function (response) {
+        if (response.status == 200) {
+          updateTable(response.response.data, "藥師");
+        }
+      },
+      error: function () {
+        alert("查無資料");
+      }
+    });
+  }
+
+  function getStaffByID() {
+    $.ajax({
+      type: "GET",
+      url: "http://140.115.81.245:8080/NCU_MIS_SA/api/administration.do",
+      data: "id=" + id,
+      crossDomain: true,
+      cache: false,
+      dataType: 'json',
+      timeout: 5000,
+      success: function (response) {
+        if (response.status == 200) {
+          updateTable(response.response.data, "櫃台行政");
+        }
+      },
+      error: function () {
+        alert("查無資料");
+      }
+    });
+  }
+  switch (title) {
+    case "1":
+      getDoctorByID();
+      break;
+    case "2":
+      getPharmacistByID();
+      break;
+    case "3":
+      getStaffByID();
+      break;
+  }
+  // page routing
+  $(".logo").click(function () {
+    window.location.href = 'appointment.html';
+  });
+  $(".appointment").click(function () {
+    window.location.href = 'appointment.html';
+  });
+  $(".patient").click(function () {
+    window.location.href = 'patient.html';
+  });
+  $(".medicine").click(function () {
+    window.location.href = 'medicine.html';
+  });
+  $(".hr").click(function () {
+    window.location.href = 'humanResource.html';
+  });
+  $(".personal").click(function () {
+    window.location.href = 'personal.html';
+  });
+  $('#logoutBtn').click(function () {
+    window.location.href = 'logout.html';
+  });
+  $(".table").click(function () {
+    window.location.href = 'humanResource.html';
+  });
+  $(".add").click(function () {
+    window.location.href = 'addHr.html';
+  });
+  $("#submit").click(function () {
+    window.location.href = 'humanResource.html';
+  });
+
+</script>
+
+</html>

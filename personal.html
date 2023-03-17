@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title></title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="statics/css/personal.css">
+</head>
+
+<body>
+    <div id="logoBar">
+        <img class="logo" src="statics/icon/Charlie_the_unicorn.png">
+        <h1 class="logo">Charlie Clinic</h1>
+    </div>
+
+    <div id="navBar">
+        <div class="page appointment">掛號管理系統</div>
+        <div class="page patient">病歷管理系統</div>
+        <div class="page medicine">藥品管理系統</div>
+        <div class="page hr">人事管理系統</div>
+        <div class="page personal" style="background-color: rgb(178, 166, 142);">個人資料頁面</div>
+        <div class="page logout"><button id="logoutBtn" type="button">登出</button></div>
+    </div>
+
+    <div id="container">
+        <div id="functions">
+            <div id="titleOfSystem">個人資料頁面</div>
+        </div>
+        <div id="upperContainer">
+            <div id="imgContainer">
+                <img src="statics/img/personalPhoto.png" width="150px">
+            </div>
+            <div id="titleContainer">
+                <div class="title name">姓名</div>
+                <div class="title dob">生日</div>
+                <div class="title phone">聯絡電話</div>
+                <div class="title address">聯絡地址</div>
+                <div class="title position">職位</div>
+            </div>
+            <div id="infoContainer">
+                <div class="info name" id="name"></div>
+                <div class="info dob" id="dob"></div>
+                <div class="info phone" id="phone"></div>
+                <div class="info address" id="address"></div>
+                <div class="info position" id="position"></div>
+            </div>
+        </div>
+        <div id="tableContainer">
+            <table>
+                <thead id="tableTitle">
+                    <tr>
+                        <th></th>
+                        <th>星期一</th>
+                        <th>星期二</th>
+                        <th>星期三</th>
+                        <th>星期四</th>
+                        <th>星期五</th>
+                        <th>星期六</th>
+                        <th>星期日</th>
+                    </tr>
+                </thead>
+                <tbody id="tableInfo">
+                    <tr>
+                        <td>上午班</td>
+                        <td class="mon morning"></td>
+                        <td class="tue morning"></td>
+                        <td class="wed morning"></td>
+                        <td class="thu morning"></td>
+                        <td class="fri morning"></td>
+                        <td class="sat morning"></td>
+                        <td class="sun morning"></td>
+                    </tr>
+                    <tr>
+                        <td>下午班</td>
+                        <td class="mon afternoon"></td>
+                        <td class="tue afternoon"></td>
+                        <td class="wed afternoon"></td>
+                        <td class="thu afternoon"></td>
+                        <td class="fri afternoon"></td>
+                        <td class="sat afternoon"></td>
+                        <td class="sun afternoon"></td>
+                    </tr>
+                    <tr>
+                        <td>晚班</td>
+                        <td class="mon evening"></td>
+                        <td class="tue evening"></td>
+                        <td class="wed evening"></td>
+                        <td class="thu evening"></td>
+                        <td class="fri evening"></td>
+                        <td class="sat evening"></td>
+                        <td class="sun evening"></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <!--<button type="button" class="btn editBtn" style="cursor: pointer;">修改密碼</button>-->
+    </div>
+</body>
+
+<script type="text/javascript" crossorigin="anonymous">
+    if (!(localStorage.getItem("isLogin"))) window.location.href = "index.html";
+
+    var id = localStorage.getItem("id");
+    var title = localStorage.getItem("title");
+
+    function updateTable(data) {
+        $.each(data, function (index, value) {
+            $("#name").append(value["name"]);
+            $("#dob").append(value["dob"]);
+            $("#phone").append("0" + value["phone"]);
+            $("#address").append(value["address"]);
+            if (title == "doctor") $("#position").append("醫生");
+            else if (title == "pharmacist") $("#position").append("藥師");
+            else if (title == "staff") $("#position").append("櫃台行政");
+        })
+    }
+
+    function updateOutpatient(data) {
+        if (data[0].clinic_hours == "上午") $(".morning").append('<img src="statics/icon/check.png" style="width: 30px;">');
+        if (data[0].clinic_hours == "下午") $(".afternoon").append('<img src="statics/icon/check.png" style="width: 30px;">');
+        if (data[0].clinic_hours == "晚上") $(".evening").append('<img src="statics/icon/check.png" style="width: 30px;">');
+    }
+
+    function getOutpatientByID() {
+        $.ajax({
+            type: "GET",
+            url: "http://140.115.81.245:8080/NCU_MIS_SA/api/outpatient.do",
+            data: "doctor_id=" + id,
+            crossDomain: true,
+            cache: false,
+            dataType: 'json',
+            timeout: 5000,
+            success: function (response) {
+                if (response.status == 200) {
+                    updateOutpatient(response.response.data);
+                }
+            },
+            error: function () {
+                alert("查無資料");
+            }
+        });
+    }
+
+    function getDoctorByID() {
+        $.ajax({
+            type: "GET",
+            url: "http://140.115.81.245:8080/NCU_MIS_SA/api/doctor.do",
+            data: "id=" + id,
+            crossDomain: true,
+            cache: false,
+            dataType: 'json',
+            timeout: 5000,
+            success: function (response) {
+                if (response.status == 200) {
+                    updateTable(response.response.data);
+                    getOutpatientByID();
+                }
+            },
+            error: function () {
+                alert("查無資料");
+            }
+        });
+    }
+
+    function getPharmacistByID() {
+        $.ajax({
+            type: "GET",
+            url: "http://140.115.81.245:8080/NCU_MIS_SA/api/pharmacist.do",
+            data: "id=" + id,
+            crossDomain: true,
+            cache: false,
+            dataType: 'json',
+            timeout: 5000,
+            success: function (response) {
+                if (response.status == 200) {
+                    updateTable(response.response.data);
+                    $("#tableContainer").hide();
+                }
+            },
+            error: function () {
+                alert("查無資料");
+            }
+        });
+    }
+
+    function getStaffByID() {
+        $.ajax({
+            type: "GET",
+            url: "http://140.115.81.245:8080/NCU_MIS_SA/api/administration.do",
+            data: "id=" + id,
+            crossDomain: true,
+            cache: false,
+            dataType: 'json',
+            timeout: 5000,
+            success: function (response) {
+                if (response.status == 200) {
+                    updateTable(response.response.data);
+                    $("#tableContainer").hide();
+                }
+            },
+            error: function () {
+                alert("查無資料");
+            }
+        });
+    }
+
+    if (title == "doctor") getDoctorByID();
+    else if (title == "pharmacist") getPharmacistByID();
+    else if (title == "staff") getStaffByID();
+
+    $(".logo").click(function () {
+        window.location.href = 'appointment.html';
+    });
+
+    $(".appointment").click(function () {
+        window.location.href = 'appointment.html';
+    });
+    $(".patient").click(function () {
+        window.location.href = 'patient.html';
+    });
+    $(".medicine").click(function () {
+        window.location.href = 'medicine.html';
+    });
+    $(".hr").click(function () {
+        window.location.href = 'humanResource.html';
+    });
+    $(".personal").click(function () {
+        window.location.href = 'personal.html';
+    });
+    $('#logoutBtn').click(function () {
+        window.location.href = 'logout.html';
+    });
+
+    $(".editBtn").click(function () {
+        window.location.href = 'editPasswd.html';
+    });
+</script>
+
+</html>
